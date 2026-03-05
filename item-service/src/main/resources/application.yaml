@@ -4,7 +4,5 @@ server:
 spring:
   application:
     name: item-service
-
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/item_db
+  mongodb:
+    uri: mongodb://localhost:27017/item_db
