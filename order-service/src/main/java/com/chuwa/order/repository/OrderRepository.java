@@ -1,7 +1,9 @@
 package com.chuwa.order.repository;
 
 import com.chuwa.order.entity.OrderEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.cassandra.repository.CassandraRepository;
+import org.springframework.stereotype.Repository;
 
-public interface OrderRepository extends CrudRepository<OrderEntity, String> {
+@Repository
+public interface OrderRepository extends CassandraRepository<OrderEntity, Long> {
 }

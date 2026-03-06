@@ -1,31 +1,38 @@
 package com.chuwa.order.entity;
 
-import lombok.*;
-import org.springframework.data.annotation.PersistenceCreator;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.List;
+import java.time.LocalDateTime;
 
-@Table("orders_by_id")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor(onConstructor_ = @PersistenceCreator)
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table("orders_by_id")
 public class OrderEntity {
+
     @PrimaryKey
-    private String orderId;
+    private Long id;
 
     private Long userId;
-    private String status; // CREATE / PAID / CANCEL
 
-    private BigDecimal totalAmount;
+    private String itemId;
 
-    private List<String> items;
+    private Integer quantity;
 
-    private Instant createdAt;
-    private Instant updatedAt;
+    private BigDecimal unitPrice;
+
+    private BigDecimal totalPrice;
+
+    private OrderStatus status;
+
+    private LocalDateTime createdAt;
 }

@@ -1,15 +1,35 @@
 package com.chuwa.order.client;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
-@FeignClient(name = "itemClient", url = "${item.service.url}")
-public interface ItemClient {
+@Component
+@RequiredArgsConstructor
+public class ItemClient {
 
-    @PostMapping("/items/{id}/inventory/decrease")
-    Integer decreaseInventory(@PathVariable("id") String id, @RequestBody QtyRequest req);
-    record  QtyRequest(int qty) {
+    private final RestTemplate restTemplate;
+
+    // 你现在 item-service 跑在 8082
+    private static final String ITEM_SERVICE_BASE_URL = "http://localhost:8082";
+
+    public Integer getInventory(String itemId) {
+        String url = ITEM_SERVICE_BASE_URL + "/items/" + itemId + "/inventory";
+        return restTemplate.getForObject(url, Integer.class);
+    }
+
+    public Integer decreaseInventory(String itemId, int qty) {
+        String url = ITEM_SERVICE_BASE_URL + "/items/" + itemId + "/inventory/decrease";
+
+        QtyRequest request = new QtyRequest();
+        request.setQty(qty);
+
+        return restTemplate.postForObject(url, request, Integer.class);
+    }
+
+    @Data
+    public static class QtyRequest {
+        private Integer qty;
     }
 }

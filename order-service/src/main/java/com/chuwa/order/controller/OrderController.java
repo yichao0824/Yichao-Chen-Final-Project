@@ -8,18 +8,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("orders")
+@RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
+
     private final OrderService orderService;
 
     @PostMapping
-    public OrderResponse create(@Valid @RequestBody CreateOrderRequest req) {
+    public OrderResponse createOrder(@Valid @RequestBody CreateOrderRequest req) {
         return orderService.createOrder(req);
     }
 
-    @GetMapping
-    public OrderResponse get(@RequestParam("id") String id) {
-        return orderService.getById(id);
+    @GetMapping("/{id}")
+    public OrderResponse getOrder(@PathVariable Long id) {
+        return orderService.getOrder(id);
+    }
+
+    @PostMapping("/{id}/cancel")
+    public OrderResponse cancelOrder(@PathVariable Long id) {
+        return orderService.cancelOrder(id);
     }
 }
