@@ -2,41 +2,41 @@ package com.chuwa.account.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.Instant;
-
-/**
- * Mapping object for a database table
- */
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Unique Account identifier
-    @Column(nullable = false, unique = true, length = 128)
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 64)
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    // Save password (BCrypt)
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String passwordHash;
 
-    @Column(nullable = false)
-    private Instant createdAt;
+    @Column(length = 255)
+    private String shippingAddress;
 
-    @PrePersist
-    void onCreate() {
-        if (createdAt == null) createdAt = Instant.now();
-    }
+    @Column(length = 255)
+    private String billingAddress;
+
+    @Column(length = 100)
+    private String paymentMethod;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

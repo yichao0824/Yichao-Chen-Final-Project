@@ -6,26 +6,13 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateAccountRequest {
+public class LoginRequest {
 
     @Email
     @NotBlank
     private String email;
 
     @NotBlank
-    @Size(min = 2, max = 50)
-    private String username;
-
-    @NotBlank
     @Size(min = 8, max = 64)
     private String password;
-
-    @Size(max = 255)
-    private String shippingAddress;
-
-    @Size(max = 255)
-    private String billingAddress;
-
-    @Size(max = 100)
-    private String paymentMethod;
 }

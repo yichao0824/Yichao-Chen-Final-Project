@@ -7,11 +7,21 @@ import lombok.Data;
 
 @Data
 public class UpdateAccountRequest {
+
     @Email
     @NotBlank
     private String email;
 
     @NotBlank
-    @Size(min = 3, max = 64)
+    @Size(min = 2, max = 50)
     private String username;
+
+    @Size(max = 255)
+    private String shippingAddress;
+
+    @Size(max = 255)
+    private String billingAddress;
+
+    @Size(max = 100)
+    private String paymentMethod;
 }
