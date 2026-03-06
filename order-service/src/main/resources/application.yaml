@@ -10,6 +10,13 @@ spring:
     local-datacenter: datacenter1
     keyspace-name: order_db
     schema-action: create_if_not_exists
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-service-group
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
 
 item:
   service:

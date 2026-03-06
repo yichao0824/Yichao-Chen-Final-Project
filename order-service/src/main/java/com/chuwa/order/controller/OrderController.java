@@ -2,6 +2,7 @@ package com.chuwa.order.controller;
 
 import com.chuwa.order.dto.CreateOrderRequest;
 import com.chuwa.order.dto.OrderResponse;
+import com.chuwa.order.dto.UpdateOrderRequest;
 import com.chuwa.order.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,12 @@ public class OrderController {
     @GetMapping("/{id}")
     public OrderResponse getOrder(@PathVariable Long id) {
         return orderService.getOrder(id);
+    }
+
+    @PutMapping("/{id}")
+    public OrderResponse updateOrder(@PathVariable Long id,
+                                     @Valid @RequestBody UpdateOrderRequest req) {
+        return orderService.updateOrder(id, req);
     }
 
     @PostMapping("/{id}/cancel")
