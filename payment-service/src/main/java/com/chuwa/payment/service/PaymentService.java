@@ -33,7 +33,7 @@ public class PaymentService {
                 .build();
 
         paymentRepository.save(payment);
-//        kafkaTemplate.send("payment-events", req.getOrderId());
+        kafkaTemplate.send("payment-events", req.getOrderId());
         return  payment;
     }
 }
