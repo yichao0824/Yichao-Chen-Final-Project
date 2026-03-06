@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,6 @@ public class OrderService {
     private final ItemClient itemClient;
 
     public OrderResponse createOrder(CreateOrderRequest req) {
-
         Integer inventory;
         try {
             inventory = itemClient.getInventory(req.getItemId());
@@ -49,7 +50,7 @@ public class OrderService {
             throw new RuntimeException("Failed to decrease inventory");
         }
 
-        BigDecimal price = new BigDecimal("100"); // 先保留 demo price，后面再接 item price
+        BigDecimal price = new BigDecimal("100");
 
         OrderEntity order = OrderEntity.builder()
                 .id(System.currentTimeMillis())
@@ -58,8 +59,8 @@ public class OrderService {
                 .quantity(req.getQuantity())
                 .unitPrice(price)
                 .totalPrice(price.multiply(new BigDecimal(req.getQuantity())))
-                .status(OrderStatus.CREATED)
-                .createdAt(LocalDateTime.now())
+                .status(OrderStatus.CREATED.name())
+                .createdAt(Instant.now())
                 .build();
 
         orderRepository.save(order);
@@ -68,7 +69,6 @@ public class OrderService {
     }
 
     public OrderResponse getOrder(Long id) {
-
         OrderEntity order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
@@ -76,23 +76,20 @@ public class OrderService {
     }
 
     public OrderResponse cancelOrder(Long id) {
-
         OrderEntity order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        if (order.getStatus() == OrderStatus.PAID) {
+        if (OrderStatus.PAID.name().equals(order.getStatus())) {
             throw new RuntimeException("Cannot cancel paid order");
         }
 
-        order.setStatus(OrderStatus.CANCELLED);
-
+        order.setStatus(OrderStatus.CANCELLED.name());
         orderRepository.save(order);
 
         return toResponse(order);
     }
 
     private OrderResponse toResponse(OrderEntity order) {
-
         return OrderResponse.builder()
                 .id(order.getId())
                 .userId(order.getUserId())
@@ -100,8 +97,8 @@ public class OrderService {
                 .quantity(order.getQuantity())
                 .unitPrice(order.getUnitPrice())
                 .totalPrice(order.getTotalPrice())
-                .status(order.getStatus())
-                .createdAt(order.getCreatedAt())
+                .status(OrderStatus.valueOf(order.getStatus()))
+                .createdAt(LocalDateTime.ofInstant(order.getCreatedAt(), ZoneId.systemDefault()))
                 .build();
     }
 }

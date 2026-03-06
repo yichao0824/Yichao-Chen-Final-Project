@@ -9,7 +9,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -32,7 +32,7 @@ public class OrderEntity {
 
     private BigDecimal totalPrice;
 
-    private OrderStatus status;
+    private String status;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 }
