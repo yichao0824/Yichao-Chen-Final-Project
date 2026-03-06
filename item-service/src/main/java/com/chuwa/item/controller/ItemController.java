@@ -2,16 +2,20 @@ package com.chuwa.item.controller;
 
 import com.chuwa.item.dto.CreateItemRequest;
 import com.chuwa.item.dto.ItemResponse;
+import com.chuwa.item.dto.UpdateItemRequest;
 import com.chuwa.item.service.ItemService;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
+
     private final ItemService itemService;
 
     @PostMapping
@@ -19,13 +23,24 @@ public class ItemController {
         return itemService.create(req);
     }
 
+    @GetMapping
+    public List<ItemResponse> getAll() {
+        return itemService.getAll();
+    }
+
     @GetMapping("/{id}")
     public ItemResponse getById(@PathVariable String id) {
         return itemService.getById(id);
     }
 
+    @PutMapping("/{id}")
+    public ItemResponse update(@PathVariable String id,
+                               @Valid @RequestBody UpdateItemRequest req) {
+        return itemService.update(id, req);
+    }
+
     @GetMapping("/{id}/inventory")
-    public Integer getInbentory(@PathVariable String id) {
+    public Integer getInventory(@PathVariable String id) {
         return itemService.getInventory(id);
     }
 
@@ -43,5 +58,4 @@ public class ItemController {
     public static class QtyRequest {
         private Integer qty;
     }
-
 }
