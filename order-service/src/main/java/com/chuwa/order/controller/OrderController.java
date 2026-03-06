@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
@@ -29,6 +31,11 @@ public class OrderController {
     public OrderResponse updateOrder(@PathVariable Long id,
                                      @Valid @RequestBody UpdateOrderRequest req) {
         return orderService.updateOrder(id, req);
+    }
+
+    @GetMapping
+    public List<OrderResponse> getAllOrders() {
+        return orderService.getAllOrders();
     }
 
     @PostMapping("/{id}/cancel")

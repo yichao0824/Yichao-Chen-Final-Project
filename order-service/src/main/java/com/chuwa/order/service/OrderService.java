@@ -15,6 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -134,7 +135,7 @@ public class OrderService {
         return toResponse(order);
     }
 
-    @KafkaListener(topics = "payment-events", groupId = "order-service-group")
+    @KafkaListener(topics = "payment-events-v2", groupId = "order-service-group")
     public void consumePaymentEvent(PaymentEvent event) {
         if (event == null || event.getOrderId() == null || event.getEventType() == null) {
             return;
@@ -177,6 +178,12 @@ public class OrderService {
     private OrderEntity findOrder(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+    }
+    public List<OrderResponse> getAllOrders() {
+        return orderRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     private OrderResponse toResponse(OrderEntity order) {

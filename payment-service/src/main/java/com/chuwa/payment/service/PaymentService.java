@@ -18,7 +18,7 @@ import java.util.Optional;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, PaymentEvent> kafkaTemplate;
 
     public Payment pay(PaymentRequest req) {
         Optional<Payment> existing = paymentRepository.findByIdempotencyKey(req.getIdempotencyKey());
@@ -103,6 +103,6 @@ public class PaymentService {
     }
 
     private void publishEvent(PaymentEvent event) {
-        kafkaTemplate.send("payment-events", event.getOrderId(), event);
+        kafkaTemplate.send("payment-events-v2", event.getOrderId(), event);
     }
 }
